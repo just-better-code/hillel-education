@@ -1,17 +1,20 @@
 {
-    "name": "kulinich/hillel",
-    "description": "Education project",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "Kulinich\\Hillel\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Anton Kulinich"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {}
+  "name": "kulinich/hillel",
+  "description": "Education project",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Kulinich\\Hillel\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Anton Kulinich"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "ext-curl": "*",
+    "ext-readline": "*"
+  }
 }
