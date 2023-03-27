@@ -15,6 +15,7 @@
   "minimum-stability": "dev",
   "require": {
     "ext-curl": "*",
-    "ext-readline": "*"
+    "ext-readline": "*",
+    "ext-bcmath": "*"
   }
 }

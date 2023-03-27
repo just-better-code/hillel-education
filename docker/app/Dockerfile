@@ -21,6 +21,7 @@ RUN apt-get update -y -q && \
     php8.2-imap \
     php8.2-mbstring \
     php8.2-xml \
+    php8.2-bcmath \
     git \
     nano \
     mc \
