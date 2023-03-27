@@ -4,7 +4,7 @@ namespace Kulinich\Hillel\UrlCompressor\Encoders;
 
 use Kulinich\Hillel\UrlCompressor\Support\BaseConverter;
 
-class Murmur3aEncoder implements Encoder
+class Murmur3aRebased64Encoder implements Encoder
 {
     public function encode(string $url): string
     {
