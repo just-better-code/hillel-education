@@ -1,8 +1,8 @@
 <?php
 
-namespace Kulinich\Hillel\UrlCompressor\Encoders;
+namespace Kulinich\Hillel\UrlCompressor\Algorithms;
 
-interface Encoder
+interface Algorithm
 {
     public function encode(string $url): string;
 

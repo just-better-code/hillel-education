@@ -1,6 +1,6 @@
 <?php
 
-namespace Kulinich\Hillel\UrlCompressor\Support;
+namespace Kulinich\Hillel\UrlCompressor\Algorithms\Support;
 
 class BaseConverter
 {

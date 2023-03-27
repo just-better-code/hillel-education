@@ -1,10 +1,10 @@
 <?php
 
-namespace Kulinich\Hillel\UrlCompressor\Encoders;
+namespace Kulinich\Hillel\UrlCompressor\Algorithms;
 
-use Kulinich\Hillel\UrlCompressor\Support\BaseConverter;
+use Kulinich\Hillel\UrlCompressor\Algorithms\Support\BaseConverter;
 
-class Murmur3aRebased64Encoder implements Encoder
+class Murmur3ARebased64Algorithm implements Algorithm
 {
     public function encode(string $url): string
     {
@@ -16,6 +16,6 @@ class Murmur3aRebased64Encoder implements Encoder
 
     public function validate(string $code): bool
     {
-        return (bool)preg_match('~^[A-Za-z0-9@-]{6}$~', trim($code));
+        return (bool)preg_match('~^[A-Za-z0-9@-]{1,8}$~', trim($code));
     }
 }

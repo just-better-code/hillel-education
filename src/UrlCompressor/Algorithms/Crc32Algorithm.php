@@ -1,8 +1,8 @@
 <?php
 
-namespace Kulinich\Hillel\UrlCompressor\Encoders;
+namespace Kulinich\Hillel\UrlCompressor\Algorithms;
 
-class Crc32Encoder implements Encoder
+class Crc32Algorithm implements Algorithm
 {
     public function encode(string $url): string
     {
