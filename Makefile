@@ -14,8 +14,16 @@ down:
 
 .PHONY: build
 build:
+	docker compose --env-file .env build
+
+.PHONY: rebuild
+rebuild:
 	docker compose --env-file .env build --no-cache
 
 .PHONY: bash
 bash:
 	docker exec -it hillel-app bash
+
+.PHONY: logs
+logs:
+	docker logs hillel-app

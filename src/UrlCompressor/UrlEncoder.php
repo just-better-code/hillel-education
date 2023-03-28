@@ -3,9 +3,10 @@
 namespace Kulinich\Hillel\UrlCompressor;
 
 use Kulinich\Hillel\UrlCompressor\Algorithms\Algorithm;
+use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
 use Kulinich\Hillel\UrlCompressor\Storages\Storage;
 
-class UrlEncoder implements Encoder
+class UrlEncoder implements IUrlEncoder
 {
     public function __construct(private Storage $storage, private Algorithm $algorithm)
     {
@@ -20,7 +21,7 @@ class UrlEncoder implements Encoder
         }
         $code = $this->algorithm->encode($url);
         if (!$this->storage->store($code, $url)) {
-            throw new \Exception("Can't store code for '$url'. Check storage.");
+            throw new \InvalidArgumentException("Can't store code for '$url'. Check storage.");
         }
         return $code;
     }

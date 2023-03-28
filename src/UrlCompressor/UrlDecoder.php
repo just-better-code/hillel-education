@@ -3,9 +3,10 @@
 namespace Kulinich\Hillel\UrlCompressor;
 
 use Kulinich\Hillel\UrlCompressor\Algorithms\Algorithm;
+use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
 use Kulinich\Hillel\UrlCompressor\Storages\Storage;
 
-class UrlDecoder implements Decoder
+class UrlDecoder implements IUrlDecoder
 {
     public function __construct(private Storage $storage, private Algorithm $algorithm)
     {
@@ -18,7 +19,7 @@ class UrlDecoder implements Decoder
         }
         $url = $this->storage->getByCode($code);
         if (empty($url)) {
-            throw new \InvalidArgumentException("URL be code '$code' not found!");
+            throw new \InvalidArgumentException("URL by code '$code' not found!");
         }
         return $url;
     }

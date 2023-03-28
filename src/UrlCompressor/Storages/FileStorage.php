@@ -4,19 +4,14 @@ namespace Kulinich\Hillel\UrlCompressor\Storages;
 
 class FileStorage implements Storage
 {
-    private const DEFAULT_FILENAME = __DIR__ . '/../../../storage/file_storage.txt';
+    private $handle;
 
-    private string $filename;
-
-    public function __construct(string $filename = '')
+    public function __construct(private string $filename)
     {
-        $filename || $filename = self::DEFAULT_FILENAME;
-        $this->filename = $filename;
     }
 
     public function store(string $code, string $url): bool
     {
-
         return $this->writeInFile([trim($code) => trim($url)]);
     }
 
@@ -44,20 +39,25 @@ class FileStorage implements Storage
 
     private function readByLine(): \Iterator
     {
-        $handle = fopen(self::DEFAULT_FILENAME, "r+");
-        if ($handle) {
-            while (($line = fgets($handle)) !== false) {
+        $this->handle = fopen($this->filename, "r+");
+        if ($this->handle) {
+            while (($line = fgets($this->handle)) !== false) {
                 yield $line;
             }
-
-            fclose($handle);
         }
     }
 
     private function writeInFile(array $data): bool
     {
-        $handle = fopen(self::DEFAULT_FILENAME, "a+");
-        fputs($handle, serialize($data) . PHP_EOL);
-        return fclose($handle);
+        $this->handle = fopen($this->filename, "a+");
+
+        return $this->handle ? fputs($this->handle, serialize($data) . PHP_EOL) : false;
+    }
+
+    public function __destruct()
+    {
+        if ($this->handle) {
+            fclose($this->handle);
+        }
     }
 }
