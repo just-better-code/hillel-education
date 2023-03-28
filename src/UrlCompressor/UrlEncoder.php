@@ -5,16 +5,27 @@ namespace Kulinich\Hillel\UrlCompressor;
 use Kulinich\Hillel\UrlCompressor\Algorithms\Algorithm;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
 use Kulinich\Hillel\UrlCompressor\Storages\Storage;
+use Kulinich\Hillel\UrlCompressor\Validators\UrlFormatValidator;
+use Kulinich\Hillel\UrlCompressor\Validators\UrlReachableValidator;
+use Kulinich\Hillel\UrlCompressor\Validators\ValidatorChain;
+use Psr\Log\LoggerInterface;
 
 class UrlEncoder implements IUrlEncoder
 {
-    public function __construct(private Storage $storage, private Algorithm $algorithm)
-    {
+    private ValidatorChain $validators;
+
+    public function __construct(
+        private Storage $storage,
+        private Algorithm $algorithm,
+        private LoggerInterface $logger,
+    ) {
+        $this->validators = (new UrlFormatValidator())
+            ->attach(new UrlReachableValidator());
     }
 
     public function encode(string $url): string
     {
-        $this->validateUrl($url);
+        $this->validators->perform($url);
         $code = $this->storage->getByUrl($url);
         if (!is_null($code)) {
             return $code;
@@ -24,28 +35,5 @@ class UrlEncoder implements IUrlEncoder
             throw new \InvalidArgumentException("Can't store code for '$url'. Check storage.");
         }
         return $code;
-    }
-
-    private function validateUrl(string $url): void
-    {
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException("URL format of '$url' is not valid!");
-        }
-        if (!$this->urlExists($url)) {
-            throw new \InvalidArgumentException("URL '$url' not reachable!");
-        }
-    }
-
-    private function urlExists(string $url): bool
-    {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        curl_exec($ch);
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        return $code == 200;
     }
 }

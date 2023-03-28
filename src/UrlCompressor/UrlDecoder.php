@@ -5,10 +5,11 @@ namespace Kulinich\Hillel\UrlCompressor;
 use Kulinich\Hillel\UrlCompressor\Algorithms\Algorithm;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
 use Kulinich\Hillel\UrlCompressor\Storages\Storage;
+use Psr\Log\LoggerInterface;
 
 class UrlDecoder implements IUrlDecoder
 {
-    public function __construct(private Storage $storage, private Algorithm $algorithm)
+    public function __construct(private Storage $storage, private Algorithm $algorithm, private LoggerInterface $logger)
     {
     }
 

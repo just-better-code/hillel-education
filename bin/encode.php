@@ -15,11 +15,11 @@ $logFilename = $config['log']['filename'] ?? '';
 
 $fileHandler = new StreamHandler($logFilename);
 $consoleHandler = new StreamHandler('php://stdout');
-$logger = new Logger('url encoder', [$fileHandler, $consoleHandler]);
+$logger = new Logger('URL encoder', [$fileHandler, $consoleHandler]);
 
 $algorithm = new Murmur3ARebased64Algorithm();
 $storage = new FileStorage($dbFilename, $logger);
-$encoder = new UrlEncoder($storage, $algorithm);
+$encoder = new UrlEncoder($storage, $algorithm, $logger);
 $app = new App($logger);
 
 $url = readline('Put url to encode: ');
