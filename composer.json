@@ -16,6 +16,7 @@
   "require": {
     "ext-curl": "*",
     "ext-readline": "*",
-    "ext-bcmath": "*"
+    "ext-bcmath": "*",
+    "monolog/monolog": "^3.0"
   }
 }

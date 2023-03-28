@@ -2,23 +2,46 @@
 
 namespace Kulinich\Hillel;
 
-use Kulinich\Hillel\UrlCompressor\Algorithms\Algorithm;
-use Kulinich\Hillel\UrlCompressor\Storages\Storage;
-use Kulinich\Hillel\UrlCompressor\UrlEncoder;
+use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
+use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
+use Psr\Log\LoggerInterface;
 
 final class App
 {
-    public function __construct(private Storage $storage, private Algorithm $encoder)
+    public function __construct(private LoggerInterface $logger)
     {
+        $this->logger->info('App started.');
     }
 
-    public function runEncode(string $url): string
+    public function runEncode(IUrlEncoder $encoder, string $url): ?string
     {
-        return (new UrlEncoder($this->storage, $this->encoder))->store($url);
+        $code = null;
+        $url = trim($url);
+        try {
+            $this->logger->info('Encoding started.');
+            $code = $encoder->encode($url);
+            $this->logger->info('Code resolved.', compact('code'));
+        } catch (\InvalidArgumentException $exception) {
+            $this->logger->warning($exception->getMessage());
+        } catch (\Throwable $exception) {
+            $this->logger->error($exception->getMessage());
+        }
+        return $code;
     }
 
-    public function runDecode(string $code): ?string
+    public function runDecode(IUrlDecoder $decoder, string $code): ?string
     {
-        return (new UrlEncoder($this->storage, $this->encoder))->fetch($code);
+        $url = null;
+        $code = trim($code);
+        try {
+            $this->logger->info('Decoding started.', compact('code'));
+            $url = $decoder->decode($code);
+            $this->logger->info('Url resolved.', compact('url'));
+        } catch (\InvalidArgumentException $exception) {
+            $this->logger->warning($exception->getMessage());
+        } catch (\Throwable $exception) {
+            $this->logger->error($exception->getMessage());
+        }
+        return $url;
     }
 }

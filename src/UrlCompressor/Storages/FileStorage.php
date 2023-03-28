@@ -2,11 +2,13 @@
 
 namespace Kulinich\Hillel\UrlCompressor\Storages;
 
+use Psr\Log\LoggerInterface;
+
 class FileStorage implements Storage
 {
     private $handle;
 
-    public function __construct(private string $filename)
+    public function __construct(private string $filename, private LoggerInterface $logger)
     {
     }
 
@@ -57,6 +59,7 @@ class FileStorage implements Storage
     public function __destruct()
     {
         if ($this->handle) {
+            $this->logger->info('Database connection closed');
             fclose($this->handle);
         }
     }
