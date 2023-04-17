@@ -42,8 +42,7 @@ class ServiceFactory
         if (is_array($value)) {
             $value = $this->buildArrayVal($value);
         }
-        if (is_string($value) && str_starts_with($value, '@')) {
-            $value = substr($value, 1, strlen($value));
+        if ($this->mustGetFromContainer($value)) {
             return $this->container->get($value);
         }
 
@@ -68,8 +67,7 @@ class ServiceFactory
             if ($type->isBuiltin()) {
                 throw new WrongConfigurationException("Can't inject builtin type");
             }
-            $description = new ServiceDescription(['class' => $type->getName()]);
-            $resolvedArguments[] = $this->build($description);
+            $resolvedArguments[] = $this->buildClassVal($type->getName());
         }
 
         return $closure(...$resolvedArguments);
@@ -77,13 +75,14 @@ class ServiceFactory
 
     public function buildClassVal(string $class, array $params = []): mixed
     {
-        $reflection = new \ReflectionClass($class);
-        $constructor = $reflection->getConstructor();
+        if ($this->mustGetFromContainer($class)) {
+            return $this->container->get($class);
+        }
+        $constructor = (new \ReflectionClass($class))->getConstructor();
         if (empty($constructor)) {
             return new $class();
         }
-        $constructorParams = $constructor->getParameters();
-        foreach ($constructorParams as $p) {
+        foreach ($constructor->getParameters() as $p) {
             $pType = $p->getType();
             $pName = $p->getName();
             if (!$pType instanceof \ReflectionNamedType) {
@@ -96,5 +95,11 @@ class ServiceFactory
         }
 
         return new $class(...$params);
+    }
+
+    private function mustGetFromContainer($value): bool
+    {
+        return is_string($value) &&
+            (str_starts_with($value, '@') || interface_exists($value));
     }
 }

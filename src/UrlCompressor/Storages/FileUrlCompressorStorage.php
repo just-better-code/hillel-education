@@ -4,7 +4,7 @@ namespace Kulinich\Hillel\UrlCompressor\Storages;
 
 use Psr\Log\LoggerInterface;
 
-class FileStorage implements Storage
+class FileUrlCompressorStorage implements UrlCompressorStorageInterface
 {
     private $handle;
 

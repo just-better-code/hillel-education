@@ -3,24 +3,18 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Kulinich\Hillel\App;
-use Kulinich\Hillel\UrlCompressor\Algorithms\Murmur3ARebased64Algorithm;
-use Kulinich\Hillel\UrlCompressor\Storages\FileStorage;
-use Kulinich\Hillel\UrlCompressor\UrlDecoder;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Kulinich\Hillel\Foundation\Config;
+use Kulinich\Hillel\Foundation\DI\Container;
+use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
 
-$config = require_once __DIR__ . '/../config/app.php';
-$dbFilename = $config['db']['filename'] ?? '';
-$logFilename = $config['log']['filename'] ?? '';
+require_once __DIR__.'/../vendor/autoload.php';
+$configData = require_once __DIR__ . '/../config/app.php';
+$config = new Config($configData);
+$container = new Container($config->get('containers'));
 
-$fileHandler = new StreamHandler($logFilename);
-$consoleHandler = new StreamHandler('php://stdout');
-$logger = new Logger('URL decoder', [$fileHandler, $consoleHandler]);
-
-$algorithm = new Murmur3ARebased64Algorithm();
-$storage = new FileStorage($dbFilename, $logger);
-$decoder = new UrlDecoder($storage, $algorithm, $logger);
-$app = new App($logger);
+/** @var App $app */
+$app = $container->get(App::class);
+$decoder = $container->get(IUrlDecoder::class);
 
 $code = readline('Put code to decode: ');
 $url = $app->runDecode($decoder, $code);

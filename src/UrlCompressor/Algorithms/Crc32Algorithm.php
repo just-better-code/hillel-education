@@ -2,7 +2,7 @@
 
 namespace Kulinich\Hillel\UrlCompressor\Algorithms;
 
-class Crc32Algorithm implements Algorithm
+class Crc32Algorithm implements EncodingAlgorithmInterface
 {
     public function encode(string $url): string
     {

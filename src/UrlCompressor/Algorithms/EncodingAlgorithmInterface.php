@@ -2,7 +2,7 @@
 
 namespace Kulinich\Hillel\UrlCompressor\Algorithms;
 
-interface Algorithm
+interface EncodingAlgorithmInterface
 {
     public function encode(string $url): string;
 

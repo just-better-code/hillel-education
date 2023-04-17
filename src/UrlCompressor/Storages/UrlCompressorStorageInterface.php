@@ -2,7 +2,7 @@
 
 namespace Kulinich\Hillel\UrlCompressor\Storages;
 
-interface Storage
+interface UrlCompressorStorageInterface
 {
     public function store(string $code, string $url): bool;
 

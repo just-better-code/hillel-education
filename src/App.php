@@ -8,8 +8,9 @@ use Psr\Log\LoggerInterface;
 
 final class App
 {
-    public function __construct(private LoggerInterface $logger)
-    {
+    public function __construct(
+        private LoggerInterface $logger
+    ) {
         $this->logger->info('App started.');
     }
 

@@ -2,9 +2,9 @@
 
 namespace Kulinich\Hillel\UrlCompressor;
 
-use Kulinich\Hillel\UrlCompressor\Algorithms\Algorithm;
+use Kulinich\Hillel\UrlCompressor\Algorithms\EncodingAlgorithmInterface;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
-use Kulinich\Hillel\UrlCompressor\Storages\Storage;
+use Kulinich\Hillel\UrlCompressor\Storages\UrlCompressorStorageInterface;
 use Kulinich\Hillel\UrlCompressor\Validators\UrlFormatValidator;
 use Kulinich\Hillel\UrlCompressor\Validators\UrlReachableValidator;
 use Kulinich\Hillel\UrlCompressor\Validators\ValidatorChain;
@@ -15,8 +15,8 @@ class UrlEncoder implements IUrlEncoder
     private ValidatorChain $validators;
 
     public function __construct(
-        private Storage $storage,
-        private Algorithm $algorithm,
+        private UrlCompressorStorageInterface $storage,
+        private EncodingAlgorithmInterface $algorithm,
         private LoggerInterface $logger,
     ) {
         $this->validators = (new UrlFormatValidator())
@@ -32,7 +32,9 @@ class UrlEncoder implements IUrlEncoder
         }
         $code = $this->algorithm->encode($url);
         if (!$this->storage->store($code, $url)) {
-            throw new \InvalidArgumentException("Can't store code for '$url'. Check storage.");
+            $msg = "Can't store code for '$url'. Check storage.";
+            $this->logger->error($msg);
+            throw new \InvalidArgumentException($msg);
         }
         return $code;
     }

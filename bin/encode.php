@@ -1,26 +1,18 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
-
 use Kulinich\Hillel\App;
-use Kulinich\Hillel\UrlCompressor\Algorithms\Murmur3ARebased64Algorithm;
-use Kulinich\Hillel\UrlCompressor\Storages\FileStorage;
-use Kulinich\Hillel\UrlCompressor\UrlEncoder;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Kulinich\Hillel\Foundation\Config;
+use Kulinich\Hillel\Foundation\DI\Container;
+use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
 
-$config = require_once __DIR__ . '/../config/app.php';
-$dbFilename = $config['db']['filename'] ?? '';
-$logFilename = $config['log']['filename'] ?? '';
+require_once __DIR__.'/../vendor/autoload.php';
+$configData = require_once __DIR__ . '/../config/app.php';
+$config = new Config($configData);
+$container = new Container($config->get('containers'));
 
-$fileHandler = new StreamHandler($logFilename);
-$consoleHandler = new StreamHandler('php://stdout');
-$logger = new Logger('URL encoder', [$fileHandler, $consoleHandler]);
-
-$algorithm = new Murmur3ARebased64Algorithm();
-$storage = new FileStorage($dbFilename, $logger);
-$encoder = new UrlEncoder($storage, $algorithm, $logger);
-$app = new App($logger);
+/** @var App $app */
+$app = $container->get(App::class);
+$encoder = $container->get(IUrlEncoder::class);
 
 $url = readline('Put url to encode: ');
 $code = $app->runEncode($encoder, $url);

@@ -32,7 +32,7 @@ class Container implements ContainerInterface, \ArrayAccess
     public function offsetGet(mixed $offset): mixed
     {
         if (!$this->implementations->has($offset)) {
-            $description = $this->descriptions->get($offset);
+            $description = $this->buildDescription($offset);
             $service = $this->factory->build($description);
             $this->implementations->put($offset, $service);
         }
@@ -47,6 +47,9 @@ class Container implements ContainerInterface, \ArrayAccess
 
     public function get(string $id)
     {
+        $offset = str_starts_with($id, '@') ? 1 : 0;
+        $id = substr($id, $offset, strlen($id));
+
         return $this->offsetGet($id);
     }
 
@@ -60,5 +63,13 @@ class Container implements ContainerInterface, \ArrayAccess
         foreach ($configurations as $service => $parameters) {
             $this->offsetSet($service, $parameters);
         }
+    }
+
+    public function buildDescription(mixed $offset): ServiceDescription
+    {
+        if (!$this->descriptions->has($offset) && class_exists($offset)) {
+            $this->descriptions->put($offset, ['class' => $offset]);
+        }
+        return $this->descriptions->get($offset);
     }
 }
