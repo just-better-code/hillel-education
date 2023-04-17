@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d29654444145f30a839df4d3793f8a05",
+    "content-hash": "3a53ae6e6d3866d5d122e6a2813345d9",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -109,6 +109,60 @@
             "time": "2023-03-10T14:05:37+00:00"
         },
         {
+            "name": "psr/container",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "90db7b9ac2a2c5b849fcb69dde58f3ae182c68f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/90db7b9ac2a2c5b849fcb69dde58f3ae182c68f5",
+                "reference": "90db7b9ac2a2c5b849fcb69dde58f3ae182c68f5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/container/issues",
+                "source": "https://github.com/php-fig/container/tree/master"
+            },
+            "time": "2022-07-19T17:36:59+00:00"
+        },
+        {
             "name": "psr/log",
             "version": "dev-master",
             "source": {
@@ -158,12 +212,53 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.0"
             },
             "time": "2021-07-14T16:46:02+00:00"
+        },
+        {
+            "name": "ufo-cms/colored_cli",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UFO-Tech/colored_cli.git",
+                "reference": "fc0dffd1cf43f1b7f57a1ec81657559e701e89bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UFO-Tech/colored_cli/zipball/fc0dffd1cf43f1b7f57a1ec81657559e701e89bb",
+                "reference": "fc0dffd1cf43f1b7f57a1ec81657559e701e89bb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "8.*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UfoCms\\ColoredCli\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Maystrenko"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/UFO-Tech/colored_cli/issues",
+                "source": "https://github.com/UFO-Tech/colored_cli/tree/1.0.0"
+            },
+            "time": "2022-10-25T09:22:48+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "ufo-cms/colored_cli": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

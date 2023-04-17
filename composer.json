@@ -17,6 +17,9 @@
     "ext-curl": "*",
     "ext-readline": "*",
     "ext-bcmath": "*",
-    "monolog/monolog": "^3.0"
+    "monolog/monolog": "^3.0",
+    "ufo-cms/colored_cli": "dev-main",
+    "psr/container": "^2.0",
+    "psr/log": "^3.0"
   }
 }

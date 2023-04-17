@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       args:
         DOCKER_APP_DIR: '${DOCKER_APP_DIR:-/app}'
-        DOCKER_ENABLE_XDEBUG: '${DOCKER_ENABLE_XDEBUG:-0}'
+        XDEBUG_MODE: '${XDEBUG_MODE:-off}'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
@@ -15,12 +15,13 @@ services:
     volumes:
       - ./:${DOCKER_APP_DIR}
     environment:
-      DOCKER_ENABLE_XDEBUG: '${DOCKER_ENABLE_XDEBUG:-0}'
       DOCKER_APP_DIR: '${DOCKER_APP_DIR:-/app}'
       XDEBUG_MODE: '${XDEBUG_MODE:-off}'
+      XDEBUG_START_WITH_REQUEST: '${XDEBUG_START_WITH_REQUEST:-yes}'
       XDEBUG_CLIENT_HOST: '${XDEBUG_CLIENT_HOST:-host.docker.internal}'
       XDEBUG_CLIENT_PORT: '${XDEBUG_CLIENT_PORT:-9001}'
-      XDEBUG_SESSION: '${XDEBUG_SESSION:-PHPSTORM}'
+      XDEBUG_CLIENT_IDEKEY: '${XDEBUG_CLIENT_IDEKEY:-PHPSTORM}'
+      XDEBUG_MAX_NESTING_LEVEL: '${XDEBUG_MAX_NESTING_LEVEL:-1000}'
       PHP_IDE_CONFIG: '${PHP_IDE_CONFIG:-serverName=app}'
 
   # Nginx service

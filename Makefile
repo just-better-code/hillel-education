@@ -6,7 +6,7 @@ SHELL := /bin/bash
 
 .PHONY: up
 up:
-	docker compose --env-file .env up -d --force-recreate
+	docker compose up -d --force-recreate
 
 .PHONY: down
 down:

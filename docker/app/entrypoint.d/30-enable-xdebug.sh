@@ -1,37 +1,39 @@
 #!/bin/sh
 
-if [ ! "${DOCKER_ENABLE_XDEBUG}" = "1" ]; then
-  echo "XDebug disabled. Skipping."
+if [ "${XDEBUG_MODE}" = "off" ]; then
+  echo "[XDebug] disabled. Skipping."
   return 0
 fi
-echo "Configuring XDebug."
+echo "[XDebug] Enabled and is being configured..."
 
-CONFIG_FILE=/etc/php/8.1/cli/conf.d/20-xdebug.ini
+CONFIG_FILE=/etc/php/8.2/mods-available/xdebug.ini
 if [ ! -f "${CONFIG_FILE}" ] ; then
-  echo "XDebug config file ${CONFIG_FILE} not found. Aborting."
+  echo "[XDebug] Config file ${CONFIG_FILE} not found. Aborting."
   return 0
 fi
 
-XDEBUG_CONFIG_MODE=off
-if [ ! -z "${XDEBUG_MODE}" ]; then
-  XDEBUG_CONFIG_MODE=${XDEBUG_MODE}
-fi
+export PHP_IDE_CONFIG=$PHP_IDE_CONFIG
 
-touch "${CONFIG_FILE}"
+XDEBUG_MODE=${XDEBUG_MODE:-debug}
+XDEBUG_START_WITH_REQUEST=${XDEBUG_START_WITH_REQUEST:-yes}
+XDEBUG_CLIENT_HOST=${XDEBUG_CLIENT_HOST:-host.docker.internal}
+XDEBUG_CLIENT_PORT=${XDEBUG_CLIENT_PORT:-9003}
+XDEBUG_CLIENT_IDEKEY=${XDEBUG_CLIENT_IDEKEY:-PHPSTORM}
+XDEBUG_MAX_NESTING_LEVEL=${XDEBUG_MAX_NESTING_LEVEL:-1000}
+
 cat <<EOF > "${CONFIG_FILE}"
-zend_extension=xdebug.so
+zend_extension                 = xdebug.so
+[xdebug]
+xdebug.mode                    = $XDEBUG_MODE
+xdebug.start_with_request      = $XDEBUG_START_WITH_REQUEST
+xdebug.client_host             = $XDEBUG_CLIENT_HOST
+xdebug.client_port             = $XDEBUG_CLIENT_PORT
+xdebug.idekey                  = $XDEBUG_CLIENT_IDEKEY
+xdebug.max_nesting_level       = $XDEBUG_MAX_NESTING_LEVEL
+xdebug.output_dir              = /tmp/debug
+xdebug.discover_client_host    = 0
+xdebug.cli_color               = 1
 EOF
 
-echo "xdebug.mode=${XDEBUG_CONFIG_MODE}" >> ${CONFIG_FILE};
-echo "xdebug.start_with_request=yes"  >> ${CONFIG_FILE};
-if [ -n "${XDEBUG_SESSION}" ] ; then
-   echo "xdebug.session=${XDEBUG_SESSION}" >> ${CONFIG_FILE};
-fi
-if [ -n "${XDEBUG_CLIENT_HOST}" ] ; then
-   echo "xdebug.client_host=${XDEBUG_CLIENT_HOST}" >> ${CONFIG_FILE};
-fi
-if [ -n "${XDEBUG_CLIENT_PORT}" ] ; then
-   echo "xdebug.client_port=${XDEBUG_CLIENT_PORT}" >> ${CONFIG_FILE};
-fi
-
-echo "Success."
+ln -srf /etc/php/8.2/mods-available/xdebug.ini /etc/php/8.2/cli/conf.d/20-xdebug.ini
+ln -srf /etc/php/8.2/mods-available/xdebug.ini /etc/php/8.2/fpm/conf.d/20-xdebug.ini
