@@ -2,9 +2,6 @@
 
 namespace Kulinich\Hillel\Foundation\DI;
 
-use Kulinich\Hillel\Foundation\DI\DTO\DescriptionStorage;
-use Kulinich\Hillel\Foundation\DI\DTO\ServiceStorage;
-use Kulinich\Hillel\Foundation\DI\DTO\StorageContract;
 use Kulinich\Hillel\Foundation\Exceptions\NotAllowedActionException;
 use Psr\Container\ContainerInterface;
 

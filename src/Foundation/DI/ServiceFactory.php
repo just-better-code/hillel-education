@@ -2,7 +2,6 @@
 
 namespace Kulinich\Hillel\Foundation\DI;
 
-use Kulinich\Hillel\Foundation\DI\DTO\ServiceDescription;
 use Kulinich\Hillel\Foundation\Exceptions\WrongConfigurationException;
 
 class ServiceFactory
@@ -45,7 +44,8 @@ class ServiceFactory
                 $value[$idx] = $this->value($item);
             }
         }
-        if (is_string($value) && $this->container->has($value)) {
+        if (is_string($value) && str_starts_with($value, '@')) {
+            $value = substr($value, 1, strlen($value));
             return $this->container->get($value);
         }
         return $value instanceof \Closure ? $value(...$args) : $value;

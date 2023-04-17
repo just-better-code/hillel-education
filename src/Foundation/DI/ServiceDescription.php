@@ -1,6 +1,6 @@
 <?php
 
-namespace Kulinich\Hillel\Foundation\DI\DTO;
+namespace Kulinich\Hillel\Foundation\DI;
 
 use Kulinich\Hillel\Foundation\Exceptions\WrongConfigurationException;
 

@@ -6,8 +6,8 @@ return [
             'class' => \Monolog\Logger::class,
             'name' => 'mono',
             'handlers' => [
-                'file_log_handler',
-                'console_log_handler',
+                '@file_log_handler',
+                '@console_log_handler',
             ]
         ],
         'file_log_handler' => [
@@ -18,7 +18,6 @@ return [
             'class' => \Monolog\Handler\StreamHandler::class,
             'stream' => 'php://stdout'
         ],
-
     ],
     'db' => [
         'filename' => __DIR__ . '/../storage/file_storage.txt',

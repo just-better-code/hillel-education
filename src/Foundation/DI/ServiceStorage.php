@@ -1,6 +1,6 @@
 <?php
 
-namespace Kulinich\Hillel\Foundation\DI\DTO;
+namespace Kulinich\Hillel\Foundation\DI;
 
 use Kulinich\Hillel\Foundation\Exceptions\ServiceNotFoundException;
 
@@ -10,11 +10,12 @@ class ServiceStorage implements StorageContract
 
     public function get(string $id)
     {
-        try {
-            return $this->data[$this->resolveKey($id)];
-        } catch (\Throwable) {
-            throw new ServiceNotFoundException();
+        $key = $this->resolveKey($id);
+        if (!isset($this->data[$key])) {
+            throw new ServiceNotFoundException("Service '$id' not found");
         }
+
+        return $this->data[$key];
     }
 
     public function has(string $id): bool
