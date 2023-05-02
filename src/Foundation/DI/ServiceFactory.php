@@ -82,6 +82,13 @@ class ServiceFactory
         if (empty($constructor)) {
             return new $class();
         }
+        $params = $this->buildConstructorParams($constructor, $params);
+
+        return new $class(...$params);
+    }
+
+    private function buildConstructorParams(\ReflectionMethod $constructor, array $params): array
+    {
         foreach ($constructor->getParameters() as $p) {
             $pType = $p->getType();
             $pName = $p->getName();
@@ -93,8 +100,7 @@ class ServiceFactory
             }
             $params[$pName] = $this->buildClassVal($pType->getName());
         }
-
-        return new $class(...$params);
+        return $params;
     }
 
     private function mustGetFromContainer($value): bool

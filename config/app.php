@@ -8,6 +8,7 @@ use Kulinich\Hillel\UrlCompressor\Storages\FileUrlCompressorStorage;
 use Kulinich\Hillel\UrlCompressor\Storages\UrlCompressorStorageInterface;
 use Kulinich\Hillel\UrlCompressor\UrlDecoder;
 use Kulinich\Hillel\UrlCompressor\UrlEncoder;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
@@ -35,11 +36,11 @@ return [
             'class' => UrlDecoder::class,
         ],
         'file_log_handler' => [
-            'class' => \Monolog\Handler\StreamHandler::class,
+            'class' => StreamHandler::class,
             'stream' => fn (\DateTime $time) => __DIR__ . '/../storage/' . $time->format('Y-m-d') . '.log',
         ],
         'console_log_handler' => [
-            'class' => \Monolog\Handler\StreamHandler::class,
+            'class' => StreamHandler::class,
             'stream' => 'php://stdout'
         ],
     ],
