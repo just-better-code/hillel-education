@@ -2,47 +2,28 @@
 
 namespace Kulinich\Hillel;
 
-use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
-use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
-use Psr\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 
-final class App
+final class App implements ContainerInterface
 {
     public function __construct(
-        private LoggerInterface $logger
+        private ContainerInterface $container,
+        private ContainerInterface $config,
     ) {
-        $this->logger->info('App started.');
     }
 
-    public function runEncode(IUrlEncoder $encoder, string $url): ?string
+    public function get(string $id): mixed
     {
-        $code = null;
-        $url = trim($url);
-        try {
-            $this->logger->info('Encoding started.');
-            $code = $encoder->encode($url);
-            $this->logger->info('Code resolved.', compact('code'));
-        } catch (\InvalidArgumentException $exception) {
-            $this->logger->warning($exception->getMessage());
-        } catch (\Throwable $exception) {
-            $this->logger->error($exception->getMessage());
-        }
-        return $code;
+        return $this->container->get($id);
     }
 
-    public function runDecode(IUrlDecoder $decoder, string $code): ?string
+    public function config(string $key): mixed
     {
-        $url = null;
-        $code = trim($code);
-        try {
-            $this->logger->info('Decoding started.', compact('code'));
-            $url = $decoder->decode($code);
-            $this->logger->info('Url resolved.', compact('url'));
-        } catch (\InvalidArgumentException $exception) {
-            $this->logger->warning($exception->getMessage());
-        } catch (\Throwable $exception) {
-            $this->logger->error($exception->getMessage());
-        }
-        return $url;
+        return $this->config->get($key);
+    }
+
+    public function has(string $id): bool
+    {
+        return $this->config->has($id);
     }
 }

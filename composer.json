@@ -17,9 +17,11 @@
     "ext-curl": "*",
     "ext-readline": "*",
     "ext-bcmath": "*",
+    "ext-pdo": "*",
     "monolog/monolog": "^3.0",
     "ufo-cms/colored_cli": "dev-main",
     "psr/container": "^2.0",
-    "psr/log": "^3.0"
+    "psr/log": "^3.0",
+    "vlucas/phpdotenv": "^5.5@dev"
   }
 }
