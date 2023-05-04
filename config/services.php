@@ -29,6 +29,8 @@ $app = [
         'class' => CliCommandHandler::class,
         'commands' => [
             '@cli.command.test',
+            '@cli.command.encode',
+            '@cli.command.decode',
         ],
     ],
     LoggerInterface::class => [
