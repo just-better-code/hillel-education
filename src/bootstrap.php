@@ -11,5 +11,4 @@ $dotenv->load();
 $configData['services'] = require_once __DIR__ . '/../config/services.php';
 $config = new Config($configData);
 $container = new Container($config->get('services'));
-
-return new App($container, $config);
+App::init($container, $config);

@@ -1,10 +1,10 @@
 <?php
 
+use Kulinich\Hillel\App;
 use Kulinich\Hillel\Foundation\Commands\CommandHandler;
 
-/** @var \Kulinich\Hillel\App $app */
-$app = require_once __DIR__ . '/../src/bootstrap.php';
-/** @var CommandHandler $handler */
-$handler = $app->get(CommandHandler::class);
+require_once __DIR__ . '/../src/bootstrap.php';
 
+/** @var CommandHandler $handler */
+$handler = App::instance()->get(CommandHandler::class);
 $handler->handle();
