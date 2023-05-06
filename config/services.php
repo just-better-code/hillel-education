@@ -4,6 +4,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Kulinich\Hillel\Foundation\Commands\CliCommandHandler;
 use Kulinich\Hillel\Foundation\Commands\CommandHandler;
 use Kulinich\Hillel\Foundation\DI\ConfigConstants as C;
+use Kulinich\Hillel\Foundation\Logging\ColorCliFormatter;
+use Kulinich\Hillel\Foundation\Logging\ColorCliLoggerProcessor;
 use Kulinich\Hillel\UrlCompressor\Algorithms\EncodingAlgorithmInterface;
 use Kulinich\Hillel\UrlCompressor\Algorithms\Murmur3ARebased64Algorithm;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
@@ -13,6 +15,7 @@ use Kulinich\Hillel\UrlCompressor\Storages\FileUrlStorage;
 use Kulinich\Hillel\UrlCompressor\Storages\UrlStorageInterface;
 use Kulinich\Hillel\UrlCompressor\UrlDecoder;
 use Kulinich\Hillel\UrlCompressor\UrlEncoder;
+use Monolog\Handler\ProcessHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -87,14 +90,20 @@ $app = [
         C::ARGUMENTS => [
             'stream' => fn(\DateTime $time) => __DIR__ . '/../storage/' . $time->format('Y-m-d') . '.log',
         ],
-
     ],
     'console_log_handler' => [
         C::CLASSNAME => StreamHandler::class,
         C::ARGUMENTS => [
             'stream' => 'php://stdout',
         ],
-
+        C::CALLS => [
+            [
+                C::METHOD => 'setFormatter',
+                C::ARGUMENTS => [
+                    'formatter' => new ColorCliFormatter(),
+                ],
+            ],
+        ],
     ],
 ];
 $commands = require_once 'commands.php';
