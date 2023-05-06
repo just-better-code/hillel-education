@@ -24,8 +24,8 @@ class ServiceDescription
             $this->className = $parameters[C::CLASSNAME];
             $this->arguments = $parameters[C::ARGUMENTS] ?? [];
             $this->calls = $this->buildCalls($parameters[C::CALLS] ?? []);
-        } catch (\Throwable) {
-            throw new WrongConfigurationException("Can't find 'class' property.");
+        } catch (\Throwable $e) {
+            throw new WrongConfigurationException("Can't build class description.", 500, $e);
         }
 
         if (!class_exists($this->className)) {

@@ -8,8 +8,9 @@ use Kulinich\Hillel\UrlCompressor\Algorithms\EncodingAlgorithmInterface;
 use Kulinich\Hillel\UrlCompressor\Algorithms\Murmur3ARebased64Algorithm;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
-use Kulinich\Hillel\UrlCompressor\Storages\FileUrlCompressorStorage;
-use Kulinich\Hillel\UrlCompressor\Storages\UrlCompressorStorageInterface;
+use Kulinich\Hillel\UrlCompressor\Storages\DbUrlStorage;
+use Kulinich\Hillel\UrlCompressor\Storages\FileUrlStorage;
+use Kulinich\Hillel\UrlCompressor\Storages\UrlStorageInterface;
 use Kulinich\Hillel\UrlCompressor\UrlDecoder;
 use Kulinich\Hillel\UrlCompressor\UrlEncoder;
 use Monolog\Handler\StreamHandler;
@@ -68,11 +69,9 @@ $app = [
             ],
         ],
     ],
-    UrlCompressorStorageInterface::class => [
-        C::CLASSNAME => FileUrlCompressorStorage::class,
-        C::ARGUMENTS => [
-            'filename' => __DIR__ . '/../storage/file_storage.txt',
-        ],
+    UrlStorageInterface::class => [
+        C::CLASSNAME => DbUrlStorage::class,
+        C::CALLS => [[C::METHOD => 'init']],
     ],
     EncodingAlgorithmInterface::class => [
         C::CLASSNAME => Murmur3ARebased64Algorithm::class,
