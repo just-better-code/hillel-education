@@ -4,7 +4,7 @@ namespace Kulinich\Hillel\UrlCompressor;
 
 use Kulinich\Hillel\UrlCompressor\Algorithms\EncodingAlgorithmInterface;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
-use Kulinich\Hillel\UrlCompressor\Storages\UrlCompressorStorageInterface;
+use Kulinich\Hillel\UrlCompressor\Storages\UrlStorageInterface;
 use Kulinich\Hillel\UrlCompressor\Validators\UrlFormatValidator;
 use Kulinich\Hillel\UrlCompressor\Validators\UrlReachableValidator;
 use Kulinich\Hillel\UrlCompressor\Validators\ValidatorChain;
@@ -15,7 +15,7 @@ class UrlEncoder implements IUrlEncoder
     private ValidatorChain $validators;
 
     public function __construct(
-        private UrlCompressorStorageInterface $storage,
+        private UrlStorageInterface $storage,
         private EncodingAlgorithmInterface $algorithm,
         private LoggerInterface $logger,
     ) {

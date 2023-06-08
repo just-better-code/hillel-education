@@ -4,13 +4,13 @@ namespace Kulinich\Hillel\UrlCompressor;
 
 use Kulinich\Hillel\UrlCompressor\Algorithms\EncodingAlgorithmInterface;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
-use Kulinich\Hillel\UrlCompressor\Storages\UrlCompressorStorageInterface;
+use Kulinich\Hillel\UrlCompressor\Storages\UrlStorageInterface;
 use Psr\Log\LoggerInterface;
 
 class UrlDecoder implements IUrlDecoder
 {
     public function __construct(
-        private UrlCompressorStorageInterface $storage,
+        private UrlStorageInterface $storage,
         private EncodingAlgorithmInterface $algorithm,
         private LoggerInterface $logger
     ) {

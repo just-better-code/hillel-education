@@ -3,11 +3,15 @@
 namespace Kulinich\Hillel\Foundation\DI;
 
 use Kulinich\Hillel\Foundation\Exceptions\WrongConfigurationException;
+use Kulinich\Hillel\Foundation\DI\ConfigConstants as C;
 
 class ServiceDescription
 {
     private string $className;
-    private array $parameters = [];
+    private array $arguments;
+
+    /** @var CallDescription[] */
+    private array $calls;
 
     public function __construct(array $parameters = [])
     {
@@ -17,11 +21,11 @@ class ServiceDescription
     private function build(array $parameters = []): void
     {
         try {
-            $this->className = $parameters['class'];
-            unset($parameters['class']);
-            $this->parameters = $parameters;
-        } catch (\Throwable) {
-            throw new WrongConfigurationException("Can't find 'class' property.");
+            $this->className = $parameters[C::CLASSNAME];
+            $this->arguments = $parameters[C::ARGUMENTS] ?? [];
+            $this->calls = $this->buildCalls($parameters[C::CALLS] ?? []);
+        } catch (\Throwable $e) {
+            throw new WrongConfigurationException("Can't build class description.", 500, $e);
         }
 
         if (!class_exists($this->className)) {
@@ -29,14 +33,34 @@ class ServiceDescription
         }
     }
 
+    /**
+     * @return CallDescription[]
+     */
+    private function buildCalls(array $calls): array
+    {
+        $result = [];
+        foreach ($calls as $call) {
+            $result[] = new CallDescription($call);
+        }
+
+        return $result;
+    }
 
     public function className(): string
     {
         return $this->className;
     }
 
-    public function params(): array
+    /**
+     * @return CallDescription[]
+     */
+    public function calls(): array
     {
-        return $this->parameters;
+        return $this->calls;
+    }
+
+    public function arguments(): array
+    {
+        return $this->arguments;
     }
 }

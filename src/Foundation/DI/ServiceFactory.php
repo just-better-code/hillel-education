@@ -14,17 +14,20 @@ class ServiceFactory
     {
         try {
             $class = $description->className();
-            $params = $description->params();
-            $params = $this->resolveParams($params);
-            return $this->buildClassVal($class, $params);
+            $arguments = $description->arguments();
+            $arguments = $this->resolveArguments($arguments);
+            $classObject = $this->buildClassVal($class, $arguments);
+            $this->runCalls($classObject, $description->calls());
         } catch (\Throwable $e) {
             $msg = "Can't resolve '{$description->className()}' dependency." . PHP_EOL;
             $msg .= $e->getMessage();
             throw new WrongConfigurationException($msg);
         }
+
+        return $classObject;
     }
 
-    private function resolveParams(array $params): array
+    private function resolveArguments(array $params): array
     {
         foreach ($params as $key => $val) {
             $val = $this->buildVal($val);
@@ -42,7 +45,7 @@ class ServiceFactory
         if (is_array($value)) {
             $value = $this->buildArrayVal($value);
         }
-        if ($this->mustGetFromContainer($value)) {
+        if ($this->aliasedInContainer($value)) {
             return $this->container->get($value);
         }
 
@@ -73,39 +76,63 @@ class ServiceFactory
         return $closure(...$resolvedArguments);
     }
 
-    public function buildClassVal(string $class, array $params = []): mixed
+    public function buildClassVal(string $class, array $args = []): mixed
     {
-        if ($this->mustGetFromContainer($class)) {
+        if ($this->aliasedInContainer($class)) {
             return $this->container->get($class);
         }
         $constructor = (new \ReflectionClass($class))->getConstructor();
         if (empty($constructor)) {
             return new $class();
         }
-        $params = $this->buildConstructorParams($constructor, $params);
+        $args = $this->buildMethodArguments($constructor, $args);
 
-        return new $class(...$params);
+        return new $class(...$args);
     }
 
-    private function buildConstructorParams(\ReflectionMethod $constructor, array $params): array
+    private function buildMethodArguments(\ReflectionMethod $method, array $args): array
     {
-        foreach ($constructor->getParameters() as $p) {
-            $pType = $p->getType();
-            $pName = $p->getName();
+        foreach ($method->getParameters() as $param) {
+            $pType = $param->getType();
+            $pName = $param->getName();
             if (!$pType instanceof \ReflectionNamedType) {
                 continue;
             }
-            if (isset($params[$pName]) || $pType->isBuiltin() || $p->isOptional()) {
+            if (isset($args[$pName]) || $pType->isBuiltin() || $param->isOptional()) {
                 continue;
             }
-            $params[$pName] = $this->buildClassVal($pType->getName());
+            $args[$pName] = $this->buildClassVal($pType->getName());
         }
-        return $params;
+        return $args;
     }
 
-    private function mustGetFromContainer($value): bool
+    /**
+     * @param CallDescription[] $calls
+     */
+    private function runCalls(object $classObject, array $calls): void
     {
-        return is_string($value) &&
-            (str_starts_with($value, '@') || interface_exists($value));
+        foreach ($calls as $call) {
+            $this->runCall($classObject, $call);
+        }
+    }
+
+    private function runCall(object $classObject, CallDescription $call): void
+    {
+        $methodName = $call->methodName();
+        $method = (new \ReflectionClass($classObject))->getMethod($methodName);
+        $arguments = $this->buildMethodArguments($method, $call->arguments());
+        if ($method->isStatic()) {
+            $classObject::$methodName(...$arguments);
+        } else {
+            $classObject->$methodName(...$arguments);
+        }
+    }
+
+    private function aliasedInContainer($value): bool
+    {
+        return is_string($value) && (
+                str_starts_with($value, '@')
+                || interface_exists($value)
+            );
     }
 }
