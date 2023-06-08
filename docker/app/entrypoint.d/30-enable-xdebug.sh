@@ -6,7 +6,7 @@ if [ "${XDEBUG_MODE}" = "off" ]; then
 fi
 echo "[XDebug] Enabled and is being configured..."
 
-CONFIG_FILE=/etc/php/8.2/mods-available/xdebug.ini
+CONFIG_FILE=/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 if [ ! -f "${CONFIG_FILE}" ] ; then
   echo "[XDebug] Config file ${CONFIG_FILE} not found. Aborting."
   return 0
@@ -34,6 +34,3 @@ xdebug.output_dir              = /tmp/debug
 xdebug.discover_client_host    = 0
 xdebug.cli_color               = 1
 EOF
-
-ln -srf /etc/php/8.2/mods-available/xdebug.ini /etc/php/8.2/cli/conf.d/20-xdebug.ini
-ln -srf /etc/php/8.2/mods-available/xdebug.ini /etc/php/8.2/fpm/conf.d/20-xdebug.ini

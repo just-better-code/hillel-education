@@ -2,5 +2,7 @@
 
 echo "Deploy app files."
 
-# composer
-# composer install --quiet
+composer
+composer install --quiet
+
+echo "Application deployed."
