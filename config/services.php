@@ -4,18 +4,16 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Kulinich\Hillel\Foundation\Commands\CliCommandHandler;
 use Kulinich\Hillel\Foundation\Commands\CommandHandler;
 use Kulinich\Hillel\Foundation\DI\ConfigConstants as C;
+use Kulinich\Hillel\Foundation\Http\Router;
 use Kulinich\Hillel\Foundation\Logging\ColorCliFormatter;
-use Kulinich\Hillel\Foundation\Logging\ColorCliLoggerProcessor;
 use Kulinich\Hillel\UrlCompressor\Algorithms\EncodingAlgorithmInterface;
 use Kulinich\Hillel\UrlCompressor\Algorithms\Murmur3ARebased64Algorithm;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlDecoder;
 use Kulinich\Hillel\UrlCompressor\Contracts\IUrlEncoder;
 use Kulinich\Hillel\UrlCompressor\Storages\DbUrlStorage;
-use Kulinich\Hillel\UrlCompressor\Storages\FileUrlStorage;
 use Kulinich\Hillel\UrlCompressor\Storages\UrlStorageInterface;
 use Kulinich\Hillel\UrlCompressor\UrlDecoder;
 use Kulinich\Hillel\UrlCompressor\UrlEncoder;
-use Monolog\Handler\ProcessHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -24,12 +22,11 @@ $dbName = $_ENV['MYSQL_DATABASE'] ?? null;
 $dbUser = $_ENV['MYSQL_USER'] ?? null;
 $dbPass = $_ENV['MYSQL_PASSWORD'] ?? null;
 $app = [
-    'pdo' => [
-        C::CLASSNAME => PDO::class,
+    'router' => [
+        C::CLASSNAME => Router::class,
         C::ARGUMENTS => [
-            'dsn' => "mysql:host=db;dbname=$dbName",
-            'username' => $dbUser,
-            'password' => $dbPass,
+            'base' => new Bramus\Router\Router(),
+            'list' => require_once 'routes.php',
         ],
     ],
     'db' => [

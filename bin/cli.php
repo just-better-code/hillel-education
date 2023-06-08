@@ -8,3 +8,4 @@ require_once __DIR__ . '/../src/bootstrap.php';
 /** @var CommandHandler $handler */
 $handler = App::instance()->get(CommandHandler::class);
 $handler->handle();
+$router = App::instance()->get('router');

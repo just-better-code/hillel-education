@@ -23,6 +23,7 @@
     "psr/container": "^2.0",
     "psr/log": "^3.0",
     "vlucas/phpdotenv": "^5.5@dev",
-    "illuminate/database": "^11.0@dev"
+    "illuminate/database": "^11.0@dev",
+    "bramus/router": "dev-master"
   }
 }
